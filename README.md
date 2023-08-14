@@ -1,4 +1,3 @@
-# MPG-LSD
 # MPG-LSD: Line segment detection based on multi-scale perceptual grouping
 ## 1. Illustration
 - This is a simple demo for our paper "MPG-LSD: Line segment detection based on multi-scale perceptual grouping". 
