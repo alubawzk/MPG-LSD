@@ -10,3 +10,7 @@
 ## 3. How to use
 - This demo can be easily used by running the 'run_MPGLSD.m' file.
 - We will release the details once the paper is published.
+
+## 4. Evaluation
+- The code and experimental results used for evaluation are available on:
+- https://github.com/alubawzk/LineSegment-Evaluations
