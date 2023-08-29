@@ -13,4 +13,4 @@
 
 ## 4. Evaluation
 - The code and experimental results used for evaluation are available on:
-- https://github.com/alubawzk/LineSegment-Evaluations
+  https://github.com/alubawzk/LineSegment-Evaluations
