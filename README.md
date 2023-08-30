@@ -2,6 +2,7 @@
 ## 1. Illustration
 - This is a simple demo for our paper "MPG-LSD: Line segment detection based on multi-scale perceptual grouping". 
 - Use of our code for any other than research purposes is prohibited.
+- We will release the constructed dataset after the paper is accepted.
 
 ## 2. Requirements
 - Windows 64 bit
