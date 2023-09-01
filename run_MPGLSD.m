@@ -1,6 +1,6 @@
 clc;clear;
 close all;
-mex mpglsd.c
+
 %% run
 draw_flag  = 1;
 input_img  = imread('P1020829.jpg');
