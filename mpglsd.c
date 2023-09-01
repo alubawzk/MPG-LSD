@@ -301,7 +301,7 @@ static bool ls_judge(ntuple_list out, double v1, double v2, double v3,
 		added_cx = out->values[i * out->dim + 4];
 		added_cy = out->values[i * out->dim + 5];
 		added_theta = out->values[i * out->dim + 6];
-		//Ïß¶Î·½ÏòÊÇ·ñÒ»ÖÂ
+		//çº¿æ®µæ–¹å‘æ˜¯å¦ä¸€è‡´
 		if (angle_diff(added_theta, v7) > (M_PI*5.0 / 180.0)) continue;
 		dx = fabs(added_x1 - added_x2);
 		dy = fabs(added_y1 - added_y2);
@@ -318,11 +318,11 @@ static bool ls_judge(ntuple_list out, double v1, double v2, double v3,
 			//if (min_y2 > max_y1 || max_y2 < min_y1) continue;
 			if (max_y2 > max_y1 || min_y2 < min_y1) continue;
 		}
-		//³¤¶È±ÈÀı
+		//é•¿åº¦æ¯”ä¾‹
 		double temp_length = sqrt((v1 - v3)*(v1 - v3) + (v2 - v4)*(v2 - v4));
 		double add_length = sqrt((added_x1 - added_x2)*(added_x1 - added_x2) + (added_y1 - added_y2)*(added_y1 - added_y2));
 		if (temp_length > (add_length*0.5)) continue;
-		//¼ÆËã´¹Ö±¾àÀë
+		//è®¡ç®—å‚ç›´è·ç¦»
 		double ds = perpe_dist(v5, v6, added_x1, added_y1, added_x2, added_y2);
 		//double ds = sqrt(pow(added_cx-v5,2)+pow(added_cy-v6,2));
 		if (ds > 1.5) continue;
@@ -847,10 +847,10 @@ static image_double gaussian_sampler( image_double in, double scale,
   if( in->xsize * scale > (double) UINT_MAX ||
       in->ysize * scale > (double) UINT_MAX )
     error("gaussian_sampler: the output image size exceeds the handled size.");
-  N = (unsigned int) ceil( in->xsize * scale );  //Ëõ·Åºóxsize
-  M = (unsigned int) ceil( in->ysize * scale );  //Ëõ·Åºóysize
+  N = (unsigned int) ceil( in->xsize * scale );  //ç¼©æ”¾åxsize
+  M = (unsigned int) ceil( in->ysize * scale );  //ç¼©æ”¾åysize
   aux = new_image_double(N,in->ysize);    // xsize * scale, ysize
-  out = new_image_double(N,M);            // ×îÖÕÍ¼Ïñ
+  out = new_image_double(N,M);            // æœ€ç»ˆå›¾åƒ
 
   /* sigma, kernel size and memory for the kernel */
   sigma = scale < 1.0 ? sigma_scale / scale : sigma_scale;
@@ -858,12 +858,12 @@ static image_double gaussian_sampler( image_double in, double scale,
      The size of the kernel is selected to guarantee that the
      the first discarded term is at least 10^prec times smaller
      than the central value. For that, h should be larger than x, with
-       e^(-x^2/2sigma^2) = 1/10^prec.  //¶ÔÓÚsigmaµÄ¸ßË¹º¯Êı, ÒªÈ·±£ÔÚX=x´¦µÄ¸ÅÂÊÃÜ¶ÈÊÇX=0´¦µÄ1/10^prec
+       e^(-x^2/2sigma^2) = 1/10^prec.  //å¯¹äºsigmaçš„é«˜æ–¯å‡½æ•°, è¦ç¡®ä¿åœ¨X=xå¤„çš„æ¦‚ç‡å¯†åº¦æ˜¯X=0å¤„çš„1/10^prec
      Then,
-       x = sigma * sqrt( 2 * prec * ln(10) ). //x ÊÇ ºËº¯ÊıµÄ³ß´ç£¨Ö»ÊÇÒ»°ë£©
+       x = sigma * sqrt( 2 * prec * ln(10) ). //x æ˜¯ æ ¸å‡½æ•°çš„å°ºå¯¸ï¼ˆåªæ˜¯ä¸€åŠï¼‰
    */
   prec = 3.0;
-  h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );  //ÒòÎªÊÇat leastÖÁÉÙÒªÊÇ1/10^prec£¬ËùÒÔceil
+  h = (unsigned int) ceil( sigma * sqrt( 2.0 * prec * log(10.0) ) );  //å› ä¸ºæ˜¯at leastè‡³å°‘è¦æ˜¯1/10^precï¼Œæ‰€ä»¥ceil
   n = 1+2*h; /* kernel size */ 
   kernel = new_ntuple_list(n);
 
@@ -879,38 +879,38 @@ static image_double gaussian_sampler( image_double in, double scale,
          xx  is the corresponding x-value in the original size image.
          xc  is the integer value, the pixel coordinate of xx.
        */
-      xx = (double) x / scale; //²ÉÑùºóµÄµãxÔÚÔ­Í¼ÖĞµÄ×ø±êxx
+      xx = (double) x / scale; //é‡‡æ ·åçš„ç‚¹xåœ¨åŸå›¾ä¸­çš„åæ ‡xx
       /* coordinate (0.0,0.0) is in the center of pixel (0,0),
          so the pixel with xc=0 get the values of xx from -0.5 to 0.5 */
       xc = (int) floor( xx + 0.5 );
-      //¸ßË¹ºËµÄÉú³Éº¯Êı£ºgaussian_kernel(ntuple_list kernel, double sigma, double mean)
-      // ¸ù¾İÏàÒªÉú³ÉµÄºË³ß¶È£¬·¶Î§ÊÇ0-size,mean×÷ÎªÖĞ¼äÖµ£¬ÒÔmeanÎªÖĞĞÄÍùÁ½±ß¼õÉÙ£¬0ÊÇ¸ßË¹ºËµÄ±ß½çµã¡£
-      // ÕıÌ¬·Ö²¼ÓĞÁ½¸ö²ÎÊı£¬¼´ÆÚÍû£¨¾ùÊı£©¦ÌºÍ±ê×¼²î¦Ò£¬¦Ò^2Îª·½²î¡£
-      // µÚÒ»²ÎÊı¦ÌÊÇ·ş´ÓÕıÌ¬·Ö²¼µÄËæ»ú±äÁ¿µÄ¾ùÖµ£¬µÚ¶ş¸ö²ÎÊı¦Ò^2ÊÇ´ËËæ»ú±äÁ¿µÄ·½²î£¬ËùÒÔÕıÌ¬·Ö²¼¼Ç×÷N£¨¦Ì£¬¦Ò^2£©¡£
-      //sigma ÃèÊöÕıÌ¬·Ö²¼×ÊÁÏÊı¾İ·Ö²¼µÄÀëÉ¢³Ì¶È£¬¦ÒÔ½´ó£¬Êı¾İ·Ö²¼Ô½·ÖÉ¢£¬¦ÒÔ½Ğ¡£¬Êı¾İ·Ö²¼Ô½¼¯ÖĞ¡£
-      //Ò²³ÆÎªÊÇÕıÌ¬·Ö²¼µÄĞÎ×´²ÎÊı£¬¦ÒÔ½´ó£¬ÇúÏßÔ½±âÆ½£¬·´Ö®£¬¦ÒÔ½Ğ¡£¬ÇúÏßÔ½Êİ¸ß¡£
-      //mean ¦ÌÊÇÕıÌ¬·Ö²¼µÄÎ»ÖÃ²ÎÊı£¬ÃèÊöÕıÌ¬·Ö²¼µÄ¼¯ÖĞÇ÷ÊÆÎ»ÖÃ¡£
-      // ¸ÅÂÊ¹æÂÉÎªÈ¡Óë¦ÌÁÚ½üµÄÖµµÄ¸ÅÂÊ´ó£¬¶øÈ¡Àë¦ÌÔ½Ô¶µÄÖµµÄ¸ÅÂÊÔ½Ğ¡¡£ÕıÌ¬·Ö²¼ÒÔX=¦ÌÎª¶Ô³ÆÖá£¬×óÓÒÍêÈ«¶Ô³Æ¡£ÕıÌ¬·Ö²¼µÄÆÚÍû¡¢¾ùÊı¡¢ÖĞÎ»Êı¡¢ÖÚÊıÏàÍ¬£¬¾ùµÈÓÚ¦Ì¡£
+      //é«˜æ–¯æ ¸çš„ç”Ÿæˆå‡½æ•°ï¼šgaussian_kernel(ntuple_list kernel, double sigma, double mean)
+      // æ ¹æ®ç›¸è¦ç”Ÿæˆçš„æ ¸å°ºåº¦ï¼ŒèŒƒå›´æ˜¯0-size,meanä½œä¸ºä¸­é—´å€¼ï¼Œä»¥meanä¸ºä¸­å¿ƒå¾€ä¸¤è¾¹å‡å°‘ï¼Œ0æ˜¯é«˜æ–¯æ ¸çš„è¾¹ç•Œç‚¹ã€‚
+      // æ­£æ€åˆ†å¸ƒæœ‰ä¸¤ä¸ªå‚æ•°ï¼Œå³æœŸæœ›ï¼ˆå‡æ•°ï¼‰Î¼å’Œæ ‡å‡†å·®Ïƒï¼ŒÏƒ^2ä¸ºæ–¹å·®ã€‚
+      // ç¬¬ä¸€å‚æ•°Î¼æ˜¯æœä»æ­£æ€åˆ†å¸ƒçš„éšæœºå˜é‡çš„å‡å€¼ï¼Œç¬¬äºŒä¸ªå‚æ•°Ïƒ^2æ˜¯æ­¤éšæœºå˜é‡çš„æ–¹å·®ï¼Œæ‰€ä»¥æ­£æ€åˆ†å¸ƒè®°ä½œNï¼ˆÎ¼ï¼ŒÏƒ^2ï¼‰ã€‚
+      //sigma æè¿°æ­£æ€åˆ†å¸ƒèµ„æ–™æ•°æ®åˆ†å¸ƒçš„ç¦»æ•£ç¨‹åº¦ï¼ŒÏƒè¶Šå¤§ï¼Œæ•°æ®åˆ†å¸ƒè¶Šåˆ†æ•£ï¼ŒÏƒè¶Šå°ï¼Œæ•°æ®åˆ†å¸ƒè¶Šé›†ä¸­ã€‚
+      //ä¹Ÿç§°ä¸ºæ˜¯æ­£æ€åˆ†å¸ƒçš„å½¢çŠ¶å‚æ•°ï¼ŒÏƒè¶Šå¤§ï¼Œæ›²çº¿è¶Šæ‰å¹³ï¼Œåä¹‹ï¼ŒÏƒè¶Šå°ï¼Œæ›²çº¿è¶Šç˜¦é«˜ã€‚
+      //mean Î¼æ˜¯æ­£æ€åˆ†å¸ƒçš„ä½ç½®å‚æ•°ï¼Œæè¿°æ­£æ€åˆ†å¸ƒçš„é›†ä¸­è¶‹åŠ¿ä½ç½®ã€‚
+      // æ¦‚ç‡è§„å¾‹ä¸ºå–ä¸Î¼é‚»è¿‘çš„å€¼çš„æ¦‚ç‡å¤§ï¼Œè€Œå–ç¦»Î¼è¶Šè¿œçš„å€¼çš„æ¦‚ç‡è¶Šå°ã€‚æ­£æ€åˆ†å¸ƒä»¥X=Î¼ä¸ºå¯¹ç§°è½´ï¼Œå·¦å³å®Œå…¨å¯¹ç§°ã€‚æ­£æ€åˆ†å¸ƒçš„æœŸæœ›ã€å‡æ•°ã€ä¸­ä½æ•°ã€ä¼—æ•°ç›¸åŒï¼Œå‡ç­‰äºÎ¼ã€‚
       gaussian_kernel( kernel, sigma, (double) h + xx - (double) xc );
       /* the kernel must be computed for each x because the fine
          offset xx-xc is different in each case */
 
-      for(y=0;y<aux->ysize;y++) //Í¬Ò»x×ø±ê ²»Í¬y×ø±êµÄºËº¯Êı ÊÇÒ»ÑùµÄ
+      for(y=0;y<aux->ysize;y++) //åŒä¸€xåæ ‡ ä¸åŒyåæ ‡çš„æ ¸å‡½æ•° æ˜¯ä¸€æ ·çš„
         {
           sum = 0.0;
-          for(i=0;i<kernel->dim;i++)     //ÓëºËº¯Êı½øĞĞ¾í»ı dim=2*h+1=7
+          for(i=0;i<kernel->dim;i++)     //ä¸æ ¸å‡½æ•°è¿›è¡Œå·ç§¯ dim=2*h+1=7
             {
               j = xc - h + i;
 
               /* symmetry boundary condition
-			  ,ÈôÏñËØµãÔÚ±ßÔµ£¬¾í»ıÔËËã³¬³ö±ßÔµµÄ²¿·ÖÔòÓÃ ¸½½üµãÀ´´úÌæ */
+			  ,è‹¥åƒç´ ç‚¹åœ¨è¾¹ç¼˜ï¼Œå·ç§¯è¿ç®—è¶…å‡ºè¾¹ç¼˜çš„éƒ¨åˆ†åˆ™ç”¨ é™„è¿‘ç‚¹æ¥ä»£æ›¿ */
               while( j < 0 ) j += double_x_size;
               while( j >= double_x_size ) j -= double_x_size;
               if( j >= (int) in->xsize ) j = double_x_size-1-j;
 
-              sum += in->data[ j + y * in->xsize ] * kernel->values[i]; //¾í»ı²Ù×÷
+              sum += in->data[ j + y * in->xsize ] * kernel->values[i]; //å·ç§¯æ“ä½œ
             }
-          aux->data[ x + y * aux->xsize ] = sum;   //ÏÂ²ÉÑù
+          aux->data[ x + y * aux->xsize ] = sum;   //ä¸‹é‡‡æ ·
         }
     }
 
@@ -1051,7 +1051,7 @@ static image_double ll_angle( image_double in, double threshold,
         gx = com1+com2; /* gradient x component */
         gy = com1-com2; /* gradient y component */
         norm2 = gx*gx+gy*gy;
-        norm = sqrt( norm2 / 4.0 ); /* gradient norm */   // ÕâÀï¿ÉÒÔĞŞ¸Ä£¬¶Ô¶à¸ö¸ßË¹Ä£ºıÏÂµÄÍ¼Ïñ·Ö±ğ¼ÆËãÌİ¶È£¬ÇóÆ½¾ù
+        norm = sqrt( norm2 / 4.0 ); /* gradient norm */   // è¿™é‡Œå¯ä»¥ä¿®æ”¹ï¼Œå¯¹å¤šä¸ªé«˜æ–¯æ¨¡ç³Šä¸‹çš„å›¾åƒåˆ†åˆ«è®¡ç®—æ¢¯åº¦ï¼Œæ±‚å¹³å‡
 
         (*modgrad)->data[adr] = norm; /* store gradient norm */
 
@@ -1060,7 +1060,7 @@ static image_double ll_angle( image_double in, double threshold,
         else
           {
             /* gradient angle computation */
-            g->data[adr] = atan2(gx,-gy);   // ÕâÀï¿ÉÒÔĞŞ¸Ä£¬¶Ô¶à¸ö¸ßË¹Ä£ºıÏÂµÄÍ¼Ïñ·Ö±ğ¼ÆËã½Ç¶È£¬ÇóÆ½¾ù
+            g->data[adr] = atan2(gx,-gy);   // è¿™é‡Œå¯ä»¥ä¿®æ”¹ï¼Œå¯¹å¤šä¸ªé«˜æ–¯æ¨¡ç³Šä¸‹çš„å›¾åƒåˆ†åˆ«è®¡ç®—è§’åº¦ï¼Œæ±‚å¹³å‡
 
             /* look for the maximum of the gradient */
             if( norm > max_grad ) max_grad = norm;
@@ -1201,42 +1201,42 @@ static image_double ms_ll_angle(image_double in, double threshold,
 				temp_gy += w_ll[scale] * gy;
 				temp_norm += w[scale] * norm;
 				//temp_angl += w[scale] * atan2(gx, -gy);
-				*(*((*msimg)->modgrad + scale) + adr) = norm;      //±£´æÃ¿¸ö³ß¶ÈµÄÌİ¶ÈÍ¼
+				*(*((*msimg)->modgrad + scale) + adr) = norm;      //ä¿å­˜æ¯ä¸ªå°ºåº¦çš„æ¢¯åº¦å›¾
 				if (norm <= threshold)
-					*(*((*msimg)->angles + scale) + adr) = NOTDEF; //±£´æÃ¿¸ö³ß¶ÈµÄlevel-line angle
+					*(*((*msimg)->angles + scale) + adr) = NOTDEF; //ä¿å­˜æ¯ä¸ªå°ºåº¦çš„level-line angle
 				else
 				{
 					count++;
 					*(*((*msimg)->angles + scale) + adr) = atan2(gx,-gy);
 				}
 			}
-			//µ±Ç°µãx,yÔÚËùÓĞ³ß¶ÈÏÂµÄ¼ÓÈ¨Æ½¾ù×î´óÖµ
+			//å½“å‰ç‚¹x,yåœ¨æ‰€æœ‰å°ºåº¦ä¸‹çš„åŠ æƒå¹³å‡æœ€å¤§å€¼
 			//temp_norm = sqrt((temp_gx*temp_gx + temp_gy*temp_gy) / 4);
 			if (temp_norm > max_grad) max_grad = temp_norm; /* look for the maximum of the gradient */
 
-			///*¶à³ß¶ÈÈÚºÏÌİ¶ÈºÍÌİ¶È½Ç*/
+			///*å¤šå°ºåº¦èåˆæ¢¯åº¦å’Œæ¢¯åº¦è§’*/
 			////(*modgrad)->data[adr] = temp_norm; /* store gradient norm */
-			//(*modgrad)->data[adr] = sqrt((temp_gx*temp_gx + temp_gy*temp_gy) / 4); // ¶à³ß¶ÈÌİ¶È¼ÓÈ¨dx,dy
+			//(*modgrad)->data[adr] = sqrt((temp_gx*temp_gx + temp_gy*temp_gy) / 4); // å¤šå°ºåº¦æ¢¯åº¦åŠ æƒdx,dy
 			//if (temp_norm <= threshold) /* norm too small, gradient no defined */
 			//	g->data[adr] = NOTDEF; /* gradient angle not defined */
 			//else
 			//{
-			//	/* ¶à³ß¶È¼ÓÈ¨Ìİ¶È½Ç */
+			//	/* å¤šå°ºåº¦åŠ æƒæ¢¯åº¦è§’ */
 			//	//g->data[adr] = temp_angl;
-			//	g->data[adr] = atan2(temp_gx, -temp_gy); // ¶à³ß¶ÈÌİ¶È¼ÓÈ¨dx,dy
+			//	g->data[adr] = atan2(temp_gx, -temp_gy); // å¤šå°ºåº¦æ¢¯åº¦åŠ æƒdx,dy
 			//	/* look for the maximum of the gradient */
 			//	//if (temp_norm > max_grad) max_grad = norm;
 			//}
 			
 			
-			///*Ô­Ìİ¶È¼ÆËã*/
+			///*åŸæ¢¯åº¦è®¡ç®—*/
 			com1 = in->data[adr + p + 1] - in->data[adr];
 			com2 = in->data[adr + 1] - in->data[adr + p];
 
 			gx = com1 + com2; /* gradient x component */
 			gy = com1 - com2; /* gradient y component */
 			norm2 = gx*gx + gy*gy;
-			norm = sqrt(norm2 / 4.0); /* gradient norm */   // ÕâÀï¿ÉÒÔĞŞ¸Ä£¬¶Ô¶à¸ö¸ßË¹Ä£ºıÏÂµÄÍ¼Ïñ·Ö±ğ¼ÆËãÌİ¶È£¬ÇóÆ½¾ù
+			norm = sqrt(norm2 / 4.0); /* gradient norm */   // è¿™é‡Œå¯ä»¥ä¿®æ”¹ï¼Œå¯¹å¤šä¸ªé«˜æ–¯æ¨¡ç³Šä¸‹çš„å›¾åƒåˆ†åˆ«è®¡ç®—æ¢¯åº¦ï¼Œæ±‚å¹³å‡
 
 			(*modgrad)->data[adr] = temp_norm; /* store gradient norm */
 
@@ -1245,7 +1245,7 @@ static image_double ms_ll_angle(image_double in, double threshold,
 			else
 			{
 				/* gradient angle computation */
-				g->data[adr] = atan2(gx, -gy);   // ÕâÀï¿ÉÒÔĞŞ¸Ä£¬¶Ô¶à¸ö¸ßË¹Ä£ºıÏÂµÄÍ¼Ïñ·Ö±ğ¼ÆËã½Ç¶È£¬ÇóÆ½¾ù
+				g->data[adr] = atan2(gx, -gy);   // è¿™é‡Œå¯ä»¥ä¿®æ”¹ï¼Œå¯¹å¤šä¸ªé«˜æ–¯æ¨¡ç³Šä¸‹çš„å›¾åƒåˆ†åˆ«è®¡ç®—è§’åº¦ï¼Œæ±‚å¹³å‡
 				//g->data[adr] = atan2(temp_gx, -temp_gy);
 
 				/* look for the maximum of the gradient */
@@ -1260,7 +1260,7 @@ static image_double ms_ll_angle(image_double in, double threshold,
 		{
 			adr = y*p + x;
 
-			/*ÔÚµ¥³ß¶ÈÌİ¶ÈÏÂµÄ¶à³ß¶ÈÎ±ÅÅĞò*/
+			/*åœ¨å•å°ºåº¦æ¢¯åº¦ä¸‹çš„å¤šå°ºåº¦ä¼ªæ’åº*/
 			temp_norm = 0.0;
 			for (size_t scale = 0; scale < (*msimg)->scale_num; scale++)
 			{
@@ -1269,7 +1269,7 @@ static image_double ms_ll_angle(image_double in, double threshold,
 			}
 			norm = temp_norm;
 			
-			/*Ô­Ìİ¶ÈÎ±ÅÅĞò*/
+			/*åŸæ¢¯åº¦ä¼ªæ’åº*/
 			//norm = (*modgrad)->data[adr];
 
 			/* store the point in the right bin according to its norm */
@@ -2775,7 +2775,7 @@ static void active_grow(int x, int y, image_double angles, struct point* reg,
 		   tempsumdx= *(*((*msimg)->angles + best_scale) + x + y * used->xsize),
 		   tempsumdy= *(*((*msimg)->angles + best_scale) + x + y * used->xsize);
 	double reg_angle_temp = 0.0;
-	/****** ¿ªÊ¼µãÖÜÎ§8ÁìÓòµÄÌİ¶È½Ç×÷Îª¿ªÊ¼·½Ïò ******/
+	/****** å¼€å§‹ç‚¹å‘¨å›´8é¢†åŸŸçš„æ¢¯åº¦è§’ä½œä¸ºå¼€å§‹æ–¹å‘ ******/
 	for (int xxx = x - 1; xxx <= x + 1; xxx++)
 	{
 		for (int yyy = y - 1; yyy <= y + 1; yyy++)
@@ -2814,7 +2814,7 @@ static void active_grow(int x, int y, image_double angles, struct point* reg,
 		dy = sin(reg_angle_temp);
 
 		/****** get the search pixel ******/
-		sx_d = px + dx * 1; //Éú³¤Ò»¸öµ¥Î»
+		sx_d = px + dx * 1; //ç”Ÿé•¿ä¸€ä¸ªå•ä½
 		sy_d = py + dy * 1;
 		sx_i = round(sx_d);
 		sy_i = round(sy_d);
@@ -2823,7 +2823,7 @@ static void active_grow(int x, int y, image_double angles, struct point* reg,
 		xxs[0] = sx_i;
 		yys[0] = sy_i;
 
-		/****** ÅĞ¶ÏÖ±Ïß¶Î·½Ïò ******/
+		/****** åˆ¤æ–­ç›´çº¿æ®µæ–¹å‘ ******/
 		if (goHorizontal(reg_angle_temp))
 		{
 			xxs[1] = xxs[0];
@@ -2839,21 +2839,21 @@ static void active_grow(int x, int y, image_double angles, struct point* reg,
 			yys[2] = yys[0];
 		}
 
-		/****** ÑØÖ±Ïß·½ÏòÉÏÓĞÒ»¸ö¶ÔÉÏÁË¾ÍÉú³¤Ò»´Î ******/
+		/****** æ²¿ç›´çº¿æ–¹å‘ä¸Šæœ‰ä¸€ä¸ªå¯¹ä¸Šäº†å°±ç”Ÿé•¿ä¸€æ¬¡ ******/
 		for (size_t j = 0; j < 1; j++)
 		{
 			xx = xxs[j];
 			yy = yys[j];
 			adr = xx + yy * used->xsize;
-			/****** ÅĞ¶ÏÏñËØµãÓĞÃ»ÓĞ³ö½ç ******/
+			/****** åˆ¤æ–­åƒç´ ç‚¹æœ‰æ²¡æœ‰å‡ºç•Œ ******/
 			if (xx < 0 || yy < 0 || xx > used->xsize || yy > used->ysize)
 				continue;
 
-			/****** ÅĞ¶ÏÏñËØµãÓĞÃ»ÓĞÊ¹ÓÃ ******/
+			/****** åˆ¤æ–­åƒç´ ç‚¹æœ‰æ²¡æœ‰ä½¿ç”¨ ******/
 			if (used->data[adr] == USED)
 				continue;
 
-			/****** ÅĞ¶ÏÏñËØµãÔÚbest scaleÉÏaligned ******/
+			/****** åˆ¤æ–­åƒç´ ç‚¹åœ¨best scaleä¸Šaligned ******/
 			if (my_isaligned(xx, yy, angles, reg_angle_temp, prec, msimg, best_scale))
 			{
 				/* add point */
@@ -2864,7 +2864,7 @@ static void active_grow(int x, int y, image_double angles, struct point* reg,
 				*reg_size = p_num;
 				printf("------ before update rect 1 ------\n");
 
-				/****** update region's angle ******/   //¼ÆËãÇøÓòµÄ½Ç¶È
+				/****** update region's angle ******/   //è®¡ç®—åŒºåŸŸçš„è§’åº¦
 				reg_angle_t = *(*((*msimg)->angles + best_scale) + adr);
 				printf("------ before update rect 2 ------\n");
 				tempdx = cos(reg_angle_t);
@@ -2958,7 +2958,7 @@ static void ms_region_grow(int x, int y, image_double angles, struct point * reg
 	/* try neighbors as new region points */
 	for (i = 0; i < *reg_size; i++)
 	{
-		for (xx = reg[i].x - 1; xx <= reg[i].x + 1; xx++)  // 8Á¬Í¨ÇøÓòÔö³¤
+		for (xx = reg[i].x - 1; xx <= reg[i].x + 1; xx++)  // 8è¿é€šåŒºåŸŸå¢é•¿
 		{
 			for (yy = reg[i].y - 1; yy <= reg[i].y + 1; yy++)
 			{
@@ -2967,7 +2967,7 @@ static void ms_region_grow(int x, int y, image_double angles, struct point * reg
 				{
 					if (xx >= 0 && yy >= 0 && xx<(int)used->xsize && yy<(int)used->ysize &&
 						used->data[xx + yy*used->xsize] != USED &&
-						my_isaligned(xx, yy, angles, *reg_angle, prec, msimg, scale)) // anglesÓÃÓÚµÃµ½Í¼Æ¬´óĞ¡
+						my_isaligned(xx, yy, angles, *reg_angle, prec, msimg, scale)) // anglesç”¨äºå¾—åˆ°å›¾ç‰‡å¤§å°
 					{
 						adr = xx + yy*used->xsize;
 						temp_norm = *(*((*msimg)->modgrad + scale) + adr);
@@ -2988,7 +2988,7 @@ static void ms_region_grow(int x, int y, image_double angles, struct point * reg
 					reg[*reg_size].x = xx;
 					reg[*reg_size].y = yy;
 					++(*reg_size);
-					/* update region's angle */   //¼ÆËãÇøÓòµÄ½Ç¶È
+					/* update region's angle */   //è®¡ç®—åŒºåŸŸçš„è§’åº¦
 					sumdx += temp_sumdx / count;
 					sumdy += temp_sumdy / count;
 					*reg_angle = atan2(sumdy, sumdx);
@@ -3046,7 +3046,7 @@ static void ms_region_grow_1(int x, int y, image_double angles, struct point * r
 
 	/* try neighbors as new region points */
 	for (i = 0; i<*reg_size; i++)
-		for (xx = reg[i].x - 1; xx <= reg[i].x + 1; xx++)  // 8Á¬Í¨ÇøÓòÔö³¤
+		for (xx = reg[i].x - 1; xx <= reg[i].x + 1; xx++)  // 8è¿é€šåŒºåŸŸå¢é•¿
 			for (yy = reg[i].y - 1; yy <= reg[i].y + 1; yy++)
 			{
 				/*single scale growing*/
@@ -3060,7 +3060,7 @@ static void ms_region_grow_1(int x, int y, image_double angles, struct point * r
 					reg[*reg_size].x = xx;
 					reg[*reg_size].y = yy;
 					++(*reg_size);
-					/* update region's angle */   //¼ÆËãÇøÓòµÄ½Ç¶È
+					/* update region's angle */   //è®¡ç®—åŒºåŸŸçš„è§’åº¦
 					sumdx += cos(angles->data[xx + yy*angles->xsize]);
 					sumdy += sin(angles->data[xx + yy*angles->xsize]);
 					*reg_angle = atan2(sumdy, sumdx);
@@ -3097,7 +3097,7 @@ static void ms_region_grow_1(int x, int y, image_double angles, struct point * r
 						reg[*reg_size].x = xx;
 						reg[*reg_size].y = yy;
 						++(*reg_size);
-						/* update region's angle */   //¼ÆËãÇøÓòµÄ½Ç¶È
+						/* update region's angle */   //è®¡ç®—åŒºåŸŸçš„è§’åº¦
 						sumdx += temp_sumdx / count;
 						sumdy += temp_sumdy / count;
 						*reg_angle = atan2(sumdy, sumdx);
@@ -3140,7 +3140,7 @@ static void region_grow( int x, int y, image_double angles, struct point * reg,
 
   /* try neighbors as new region points */
   for(i=0; i<*reg_size; i++)
-    for(xx=reg[i].x-1; xx<=reg[i].x+1; xx++)  // 8Á¬Í¨ÇøÓòÔö³¤
+    for(xx=reg[i].x-1; xx<=reg[i].x+1; xx++)  // 8è¿é€šåŒºåŸŸå¢é•¿
       for(yy=reg[i].y-1; yy<=reg[i].y+1; yy++)
         if( xx>=0 && yy>=0 && xx<(int)used->xsize && yy<(int)used->ysize &&
             used->data[xx+yy*used->xsize] != USED &&
@@ -3152,7 +3152,7 @@ static void region_grow( int x, int y, image_double angles, struct point * reg,
             reg[*reg_size].y = yy;
             ++(*reg_size);
 
-            /* update region's angle */   //¼ÆËãÇøÓòµÄ½Ç¶È
+            /* update region's angle */   //è®¡ç®—åŒºåŸŸçš„è§’åº¦
             sumdx += cos( angles->data[xx+yy*angles->xsize] );
             sumdy += sin( angles->data[xx+yy*angles->xsize] );
             *reg_angle = atan2(sumdy,sumdx);
@@ -3574,7 +3574,7 @@ static int ms_refine(struct point * reg, int * reg_size, image_double modgrad,
 	double my_ang_diff = 0.0;
 	double sum_t = 0.0, s_sum_t = 0.0, n_t = 0.0;
 	double angl_scale = 0.0, grad_scale = 0.0;
-	/****** ÔÚ×î¼Ñ³ß¶ÈÕÒ·½ÏòÖØĞÂÄâºÏ ******/
+	/****** åœ¨æœ€ä½³å°ºåº¦æ‰¾æ–¹å‘é‡æ–°æ‹Ÿåˆ ******/
 	//for (i = 0; i<*reg_size; i++)
 	//{
 	//	p_addr = reg[i].x + reg[i].y * used->xsize;
@@ -3745,14 +3745,14 @@ double * LineSegmentDetection( int * n_out,
 	/* load and scale image (if necessary) and compute angle at each pixel */
 	image = new_image_double_ptr( (unsigned int) X, (unsigned int) Y, img );
 
-	/******** ¶à³ß¶ÈÑİ»¯ ********/
+	/******** å¤šå°ºåº¦æ¼”åŒ– ********/
 	size_t scale_num = scale_n;
 	int cond = condition;
 	double sigma = 0.25;// 0.25;
 	double step = sqrt(2);
 	scaled_image = gaussian_sampler(image, scale, sigma_scale); //sigma * step * step
 
-	/******** ¶à³ß¶ÈÎ±ÅÅĞò ********/
+	/******** å¤šå°ºåº¦ä¼ªæ’åº ********/
 	*msimg = new_multiscale_img_ini(scaled_image->xsize, scaled_image->ysize, scale_num, NOTDEF);
 	for (size_t i = 0; i < scale_num; i++)
 	{
@@ -3793,8 +3793,8 @@ double * LineSegmentDetection( int * n_out,
 	if( reg == NULL ) error("not enough memory!");
 
 
-	int* scale_count = (int*)malloc((*msimg)->scale_num * sizeof(int)); //Ã¿ÌõÏß¶Î·ÖÅäÒ»¸ö´æÔÚ³ß¶ÈµÄ¼ÆÊıÆ÷
-	double* scale_theta = (double*)malloc((*msimg)->scale_num * sizeof(double)); //Ã¿ÌõÏß¶Î·ÖÅäÒ»¸ö´æÔÚ³ß¶ÈµÄ¼ÆÊıÆ÷
+	int* scale_count = (int*)malloc((*msimg)->scale_num * sizeof(int)); //æ¯æ¡çº¿æ®µåˆ†é…ä¸€ä¸ªå­˜åœ¨å°ºåº¦çš„è®¡æ•°å™¨
+	double* scale_theta = (double*)malloc((*msimg)->scale_num * sizeof(double)); //æ¯æ¡çº¿æ®µåˆ†é…ä¸€ä¸ªå­˜åœ¨å°ºåº¦çš„è®¡æ•°å™¨
 
 
 	bool flag_add_ls;
@@ -3814,31 +3814,31 @@ double * LineSegmentDetection( int * n_out,
 			cond = exist_num;*/
 			
 
-			/******* ¶à³ß¶È²¹³ä *******/
+			/******* å¤šå°ºåº¦è¡¥å…… *******/
 			/*ms_region_grow_1(list_p->x, list_p->y, angles, reg, &reg_size,
 								&reg_angle, used, prec, msimg, cond, scale_count);*/
 
-			/******* ¶à³ß¶ÈÁª¶¯ *******/
+			/******* å¤šå°ºåº¦è”åŠ¨ *******/
 			ms_region_grow(list_p->x, list_p->y, angles, reg, &reg_size,
 						   &reg_angle, used, prec, msimg, cond, scale_count, scale_theta);
 
 			if (reg_size < min_reg_size) continue;
 
-			/******* Í¬²½¶à³ß¶È *******/
+			/******* åŒæ­¥å¤šå°ºåº¦ *******/
 			//ms_region2rect(reg, reg_size, modgrad, reg_angle, prec, p, &rec, msimg, rho, scale_count);
 
-			/******* ¶¯Ì¬¶à³ß¶È *******/
+			/******* åŠ¨æ€å¤šå°ºåº¦ *******/
 			int best_scale;
 			ms_region2rect1(reg, reg_size, modgrad, reg_angle, prec, p, &rec, msimg, rho, scale_count, &best_scale, scale_theta);
 
-			/******* ¶à³ß¶Èrefine *******/
+			/******* å¤šå°ºåº¦refine *******/
 			if (!ms_refine(reg, &reg_size, modgrad, reg_angle, prec, p, &rec, used, angles, 
 						   density_th, msimg, cond, scale_count, &best_scale, rho, scale_theta))
 			{
 				continue;
 			}
 
-			/******* ¶à³ß¶Èimprove *******/
+			/******* å¤šå°ºåº¦improve *******/
 			//log_nfa = rect_improve(&rec, angles, logNT, log_eps);
 			log_nfa = ms_rect_improve(&rec, angles, logNT, log_eps, msimg, best_scale);
 			if (log_nfa <= log_eps) continue;
@@ -3846,7 +3846,7 @@ double * LineSegmentDetection( int * n_out,
 			rec.x1 += 1.0; rec.y1 += 1.0;
 			rec.x2 += 1.0; rec.y2 += 1.0;
 
-			/* ÅĞ¶ÏÊÇ²»ÊÇÓëÖ®Ç°¼ì²âµ½µÄÖ±Ïß¶Î½Ó½ü */
+			/* åˆ¤æ–­æ˜¯ä¸æ˜¯ä¸ä¹‹å‰æ£€æµ‹åˆ°çš„ç›´çº¿æ®µæ¥è¿‘ */
 			if (ls_judge(out, rec.x1, rec.y1, rec.x2, rec.y2, rec.x, rec.y, rec.theta) && 
 				dist(rec.x1, rec.y1, rec.x2, rec.y2) > 5)
 			{
@@ -3911,7 +3911,7 @@ double * LineSegmentDetection( int * n_out,
 }
 
 /*----------------------------------------------------------------------------*/
-/** LSD Simple Interface. ĞÂ¼ÓÁËÈı¸ö²ÎÊı£¬scale ºÍ sigma_scale , log_eps
+/** LSD Simple Interface. æ–°åŠ äº†ä¸‰ä¸ªå‚æ•°ï¼Œscale å’Œ sigma_scale , log_eps
  */
 double * lsd(int * n_out, double * img, int X, int Y,double log_eps, multiscale_img * msimg, int scale_n, int condition)
 {
@@ -3947,12 +3947,12 @@ void mexFunction(int nlhs, mxArray *plhs[],
 	int condition;
 	
 	/****** set parameters ******/
-	M = mxGetPr(prhs[0]);   // ½ÓÊÜÊäÈëÍ¼ÏñdoubleĞÍ  800 *551
+	M = mxGetPr(prhs[0]);   // æ¥å—è¾“å…¥å›¾åƒdoubleå‹  800 *551
 	Y = m = mxGetM(prhs[0]); // 551
 	X = n = mxGetN(prhs[0]);  // 800
-	scale_n = (int)mxGetScalar(prhs[1]);
-	condition = (int)mxGetScalar(prhs[2]);
-	dim = 7;                   //Êä³öÖµÓĞ7ÁĞ£¬- x1,y1,x2,y2,width,p,-log10(NFA)
+	scale_n = 5;
+	condition = 3;
+	dim = 7;                   //è¾“å‡ºå€¼æœ‰7åˆ—ï¼Œ- x1,y1,x2,y2,width,p,-log10(NFA)
 	log_eps = 0;
 	imgptr = (double*)calloc((size_t)(X*Y), sizeof(double));
 
@@ -3967,13 +3967,13 @@ void mexFunction(int nlhs, mxArray *plhs[],
 	out = lsd(&n_out, imgptr, X, Y, log_eps, &msimg, scale_n, condition);
 
 	/****** output LSs ******/
-	plhs[0] = mxCreateDoubleMatrix(n_out, dim, mxREAL);//½¨Á¢mĞĞnÁĞµÄÊµË«¾«¶È¾ØÕó£¨mxREAL£©£¬plhsÎªmxArrayÊı¾İÀàĞÍ¡£
+	plhs[0] = mxCreateDoubleMatrix(n_out, dim, mxREAL);//å»ºç«‹mè¡Œnåˆ—çš„å®åŒç²¾åº¦çŸ©é˜µï¼ˆmxREALï¼‰ï¼Œplhsä¸ºmxArrayæ•°æ®ç±»å‹ã€‚
 	MP = mxGetPr(plhs[0]);
 	for (i = 0; i<n_out; i++)
 		for (j = 0; j<dim; j++)
 			MP[IDX(j, i, n_out)] = out[IDX(i, j, dim)];
 	
-	/****** ´«µİ³ß¶È¿Õ¼äÍ¼ ******/
+	/****** ä¼ é€’å°ºåº¦ç©ºé—´å›¾ ******/
 	int imgx = msimg->xsize;
 	int imgy = msimg->ysize;
 	int adr_c,adr_matlab;
