@@ -31,3 +31,15 @@ If you find this code useful, please consider citing:
   publisher={Elsevier}
 }
 ```
+and
+```text
+@article{wang2023contrast,
+  title={Contrast-Guided Line Segment Detection},
+  author={Wang, Zikai and Zhong, Baojiang and Han, Dongxu and Ma, Kai-Kuang},
+  journal={IEEE Signal Processing Letters},
+  year={2023},
+  volume={31},
+  pages={281-285},
+  publisher={IEEE}
+}
+```
