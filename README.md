@@ -14,3 +14,20 @@
 
 ## 4. Evaluation
 - The code and experimental results used for evaluation are available on: https://github.com/alubawzk/LineSegment-Evaluations
+- The constructed dataset 'RENOIR-LineSegment' is available on:https://github.com/alubawzk/CGLSD
+  
+Citation
+--------
+If you find this code useful, please consider citing:
+
+```text
+@article{wang2024mpg,
+  title={MPG-LSD: A high-quality line segment detector based on multi-scale perceptual grouping},
+  author={Wang, Zikai and Zhong, Baojiang and Chen, Xueyuan and Zheng, Hangjia},
+  journal={Pattern Recognition},
+  volume={149},
+  pages={110286},
+  year={2024},
+  publisher={Elsevier}
+}
+```
